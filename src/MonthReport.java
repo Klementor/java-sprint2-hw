@@ -1,12 +1,15 @@
 import java.util.ArrayList;
 
 public class MonthReport {
-    ArrayList<MonthTrade> trades = new ArrayList<>();
+    private ArrayList<MonthTrade> trades = new ArrayList<>();
+
+    public ArrayList<MonthTrade> getTrades() {
+        return trades;
+    }
+
+    public void setTrades(ArrayList<MonthTrade> trades) {
+        this.trades = trades;
+    }
 }
 
-class MonthTrade {
-    String itemName = null;
-    Boolean isExpense = false;
-    int quantity = 0;
-    int sumOfOne = 0;
-}
+
