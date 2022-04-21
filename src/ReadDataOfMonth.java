@@ -1,32 +1,19 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class ReadDataOfMonth {
     private final ArrayList<MonthReport> reports;
-
-    ReadDataOfMonth() {
-        reports = new ArrayList<>();
+    private static final int MONTH_COUNT = 3;
+    private static final int COSTS_AND_PROFITS = 2;
+    public ReadDataOfMonth() {
+        this.reports = new ArrayList<>();
     }
 
     public void read(String path, int monthNum) {
-        String fileContents = readFileContentsOrNull(path);
-        assert fileContents != null;
+        String fileContents = ReadFileContentsOrNull.readFileContentsOrNull(path);
         String[] lines = fileContents.split("\n");
         for (int i = 1; i < lines.length; i++) {
             String[] data = lines[i].split(",");
             insertData(data, monthNum);
-        }
-    }
-
-    private static String readFileContentsOrNull(String path) {
-        try {
-            return Files.readString(Path.of(path));
-        } catch (IOException e) {
-            System.out.println("Невозможно прочитать файл с месячным отчётом. Возможно, файл не находится в " +
-                    "нужной директории.");
-            return null;
         }
     }
 
@@ -74,27 +61,35 @@ public class ReadDataOfMonth {
     }
 
     public int[][] sum() {
-        int [][] sumOfMonth = new int[3][2];
-        int monthNum=1;
-        while (monthNum<=4) {
-            int sum_true = 0;
-            int sum_false = 0;
-            if (monthNum < 4) {
-                for (int a = 0; a < reports.get(monthNum - 1).getTrades().size(); a++) {
-                    if (reports.get(monthNum - 1).getTrades().get(a).getExpense()) {
-                        sum_true += (reports.get(monthNum - 1).getTrades().get(a).getSumOfOne() *
-                                reports.get(monthNum - 1).getTrades().get(a).getQuantity());
+        int [][] sumOfMonth = new int[MONTH_COUNT][COSTS_AND_PROFITS];
+        for (int monthNum=0; monthNum<=MONTH_COUNT; monthNum++) {
+            int sumTrue = 0;
+            int sumFalse = 0;
+            if (monthNum < MONTH_COUNT) {
+                for (int a = 0; a < reports.get(monthNum).getTrades().size(); a++) {
+                    if (reports.get(monthNum).getTrades().get(a).getExpense()) {
+                        sumTrue += (reports.get(monthNum).getTrades().get(a).getSumOfOne() *
+                                reports.get(monthNum).getTrades().get(a).getQuantity());
                     } else {
-                        sum_false += (reports.get(monthNum - 1).getTrades().get(a).getSumOfOne() *
-                                reports.get(monthNum - 1).getTrades().get(a).getQuantity());
+                        sumFalse += (reports.get(monthNum).getTrades().get(a).getSumOfOne() *
+                                reports.get(monthNum).getTrades().get(a).getQuantity());
                     }
                 }
-                sumOfMonth[monthNum - 1][0] = sum_true;
-                sumOfMonth[monthNum - 1][1] = sum_false;
+                sumOfMonth[monthNum][0] = sumTrue;
+                sumOfMonth[monthNum][1] = sumFalse;
             }
-            monthNum++;
         }
         return sumOfMonth;
+    }
+
+    public void CheckMonth(){
+        if (!reports.isEmpty()) {
+            for (int i = 1; i <= MONTH_COUNT; i++) {
+                monthValueOutput(i);
+            }
+        } else {
+            System.out.println("Сначала считайте месячные отчеты");
+        }
     }
 
     public ArrayList<MonthReport> getReports() {

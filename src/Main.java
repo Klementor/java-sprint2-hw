@@ -1,23 +1,22 @@
 import java.util.Scanner;
 
 public class Main {
-
+    private static final int MONTH_COUNT = 3 ;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ReadDataOfMonth readDataOfMonth = new ReadDataOfMonth();
         ReadDataOfYear readDataOfYear = new ReadDataOfYear();
         CompareService compareService = new CompareService();
+        ReconciliationReport reconciliationReport = new ReconciliationReport();
         int year = 0;
-        while (true) {
+        boolean isEnabled = true;
+        while (isEnabled) {
             printMenu();
             int command = scanner.nextInt();
             switch (command) {
-
                 case 1: {
-                    int i = 1;
-                    while (i <= 3) {
+                    for (int i = 1; i <= MONTH_COUNT; i++) {
                         readDataOfMonth.read("resources/m.20210" + i + ".csv", i);
-                        i++;
                     }
                     break;
                 }
@@ -30,43 +29,27 @@ public class Main {
                 }
 
                 case 3: {
-                    if (!readDataOfMonth.getReports().isEmpty()) {
-                        int[][] sumOfMonths = readDataOfMonth.sum();
-                        int[][] sumOfYear = readDataOfYear.sum();
-                        if (compareService.isEqual(sumOfMonths, sumOfYear)) {
-                            System.out.println("Отчеты сошлись!");
-                        } else {
-                            System.out.println("В месяце " + compareService.ErrorMonth + " ошибка");
-                        }
-                    } else {
-                        System.out.println("Сначала считайте отчеты");
-                    }
+                    int[][] sumOfMonths = readDataOfMonth.sum();
+                    int[][] sumOfYear = readDataOfYear.sum();
+                    boolean fullness = readDataOfMonth.getReports().isEmpty();
+                    boolean isEqual = compareService.isEqual(sumOfMonths, sumOfYear);
+                    int errorMonth = compareService.getErrorMonth();
+                    reconciliationReport.reconciliation(fullness, isEqual, errorMonth);
                     break;
                 }
 
                 case  4: {
-                    if (!readDataOfMonth.getReports().isEmpty()) {
-                        int i = 1;
-                        while (i <= 3) {
-                            readDataOfMonth.monthValueOutput(i);
-                            i++;
-                        }
-                    } else {
-                        System.out.println("Сначала считайте месячные отчеты");
-                    }
+                    readDataOfMonth.CheckMonth();
                     break;
                 }
                 case 5: {
-                    if (!readDataOfYear.getMonth().isEmpty()) {
-                        readDataOfYear.yearValueOutput(year);
-                    } else {
-                        System.out.println("Сначала считайте годовой отчет");
-                    }
+                    readDataOfYear.ChechYear(year);
                     break;
                 }
 
                 case 373: {
                     System.out.println("Выход");
+                    isEnabled = false;
                     break;
                 }
 
@@ -88,5 +71,3 @@ public class Main {
         System.out.println("6 - Чтобы завершить работу, введите число 373");
     }
     }
-
-

@@ -1,13 +1,9 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class ReadDataOfYear {
     private final ArrayList<Integer> month;
     private final ArrayList<Integer> amount;
     private final ArrayList<Boolean> isExpense;
-
     ReadDataOfYear() {
         month = new ArrayList<>();
         amount = new ArrayList<>();
@@ -15,7 +11,7 @@ public class ReadDataOfYear {
     }
 
     public void read(String path) {
-        String fileContents = readFileContentsOrNull(path);
+        String fileContents = ReadFileContentsOrNull.readFileContentsOrNull(path);
         assert fileContents != null;
         String[] lines = fileContents.split("\n");
         for (int i = 1; i < lines.length; i++) {
@@ -24,14 +20,7 @@ public class ReadDataOfYear {
         }
     }
 
-    private static String readFileContentsOrNull(String path) {
-        try {
-            return Files.readString(Path.of(path));
-        } catch (IOException e) {
-            System.out.println("Невозможно прочитать файл с месячным отчётом. Возможно, файл не находится в нужной директории.");
-            return null;
-        }
-    }
+
 
     private void insertData(String[] data) {
         month.add(Integer.valueOf(data[0]));
@@ -66,6 +55,14 @@ public class ReadDataOfYear {
                 sumOfYear[numMonth-1][1] = amount.get(i);
             }
         return sumOfYear;
+    }
+
+    public void ChechYear(int year){
+        if (!getMonth().isEmpty()) {
+            yearValueOutput(year);
+        } else {
+            System.out.println("Сначала считайте годовой отчет");
+        }
     }
 
     public ArrayList<Integer> getMonth() {

@@ -1,7 +1,7 @@
 public class CompareService {
     private static final int MONTH_COUNT = 3;
     private static final int CASH_TRANSACTIONS = 2;
-
+    private Integer ErrorMonth = 0;
     public Boolean isEqual (int [][] sumOfMonths, int[][] sumOfYear){
         for ( int i = 0; i < MONTH_COUNT; i++) {
             for (int j = 0; j < CASH_TRANSACTIONS; j++) {
@@ -13,5 +13,7 @@ public class CompareService {
         }
         return true;
     }
-    public Integer ErrorMonth = 0;
+    public Integer getErrorMonth() {
+        return ErrorMonth;
+    }
 }
